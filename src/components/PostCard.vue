@@ -1,53 +1,53 @@
 <template>
   <div class="container mt-5">
   <div class="row">
-  <div v-for="(post, index) in posts" v-bind:key="index">
+  <div v-for="(product, index) in products" v-bind:key="index">
     <b-card
     no-body
     tag="article"
     style="width: 70em;"
     class="mb-2 ml-4 overflow-hidden"
-	:items="post"
+	:items="product"
   >
   <b-row no-gutters>
 	<b-col md="6">
         <b-card-img src="https://picsum.photos/400/400/?image=20" alt="Image" class="rounded-0"></b-card-img>
 	</b-col>
 	<b-col md="6">
-	<b-card-body title="Post">
+	<b-card-body title="Product">
     <b-card-text>
-	Name: {{ post.name }}
+	Name: {{ product.name }}
     </b-card-text>
 	<b-card-text>
-	SKU: {{ post.sku }}
+	SKU: {{ product.sku }}
     </b-card-text>
 	<b-card-text>
-	Stockable: {{ post.stockable }}
+	Stockable: {{ product.stockable }}
     </b-card-text>
 	<b-card-text >
-	Category: {{ post.category }}
+	Category: {{ product.category }}
     </b-card-text>
 	<b-card-text>
-	Brand: {{ post.brand }}
+	Brand: {{ product.brand }}
     </b-card-text>
 	<b-card-text>
-	{{ post.usp }}
+	{{ product.usp }}
     </b-card-text>
 	<b-card-text>
-	Description: {{ post.description }}
+	Description: {{ product.description }}
     </b-card-text>
 	<b-card-text>
-	Variant: {{ post.variant }}
+	Variant: {{ product.variant }}
     </b-card-text>
 	</b-card-body>
 	<div class="mt-3">
-	<b-button @click="editPost(index)" variant="warning" v-b-modal.modal-lg>Edit</b-button>
+	<b-button @click="editPost(index)" variant="warning">Edit</b-button>
 	<b-button class="ml-3" @click="deletePost(index)" variant="danger">Delete</b-button>
 	</div>
 	</b-col>
 	</b-row>
   </b-card>
-  <PostModal v-bind:post="post" />
+  <PostModal />
   </div>
   </div>
   </div>
@@ -60,41 +60,26 @@ import { mapActions } from 'vuex';
 import PostModal from './PostModal.vue';
 
   export default {
+	name: 'PostCard',
 	computed: mapState({
-	posts: state => state.posts
+	products: state => state.products,
+	cardModals: state => state.cardModals
 	}),
     data() {
       return {
-        post: {}
+		editindex: null
       };
     },
 	methods: {
 	...mapMutations([
-	'deletePost'
+	'deletePost', 'addUpdateProduct', 'showCardModal'
 	]),
 	...mapActions([
-      'deletePost'
+      'deletePost', 'addUpdateProduct', 'showCardModal'
     ]),
 	editPost(id) {
-	this.editIndex = id;
-	let selectedPost = this.$store.state.posts.find((element, index) => {
-	if (index === id) {
-	return element;
-	} else {
-	return {};
-	} 
-	});
-	this.post = {
-	name: selectedPost.name,
-	sku: selectedPost.sku,
-	stockable: selectedPost.stockable,
-	category: selectedPost.category,
-	brand: selectedPost.brand,
-	usp: selectedPost.usp,
-	description: selectedPost.description,
-	variant: selectedPost.variant,
-	image: null
-	};
+	this.$store.dispatch('showCardModal', id);
+	this.$store.dispatch('addUpdateProduct', id);
 	},
 	deletePost(index) {
 	this.$store.dispatch('deletePost', index);

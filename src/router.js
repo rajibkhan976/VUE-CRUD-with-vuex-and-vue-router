@@ -18,10 +18,6 @@ const routes = [
 	{
 		path: "/add",
 		component: PostModal
-	},
-	{
-		path: "/post/:id",
-		component: PostModal
 	}
 ];
 

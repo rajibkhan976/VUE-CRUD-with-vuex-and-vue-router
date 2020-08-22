@@ -21,10 +21,12 @@
       </b-form-group>
 		<b-form-group id="input-group-3" label="Product Brand" label-for="input-3">
         <b-form-select
-          id="input-3"
-          v-model="form.brand"
-          :options="brands"
-          required
+        id="input-3"
+        v-model="form.brand"
+        :options="brands" 
+		multiple 
+		v-on:change="openCreateBrandModal"
+        required
         ></b-form-select>
       </b-form-group>
 		<b-form-group id="input-group-4" label="Description" label-for="input-4">
@@ -83,12 +85,14 @@
       </b-form-group>
     </div>
 	<div class="mt-3">
-	<b-button class="ml-3" type="submit" variant="primary">Submit</b-button>
-	<b-button class="ml-2" type="reset" variant="danger">Reset</b-button>
+	<b-button class="ml-3" type="submit" variant="success">Save</b-button>
+	<b-button class="ml-2" type="reset" variant="warning">Reset</b-button>
+	<b-button class="ml-2" variant="danger" @click="hideModal">Close</b-button>
 	</div>
 	</div>
 	</div>
     </b-form>
+	<BrandModal />
 	</div>
 </template>
 
@@ -96,22 +100,31 @@
 import { mapState } from 'vuex';
 import { mapMutations } from 'vuex';
 import { mapActions } from 'vuex';
+import BrandModal from './BrandModal.vue';
 
   export default {
+	name: 'PostForm',
 	computed: mapState({
-	posts: state => state.posts
+	products: state => state.products,
+	cardModals: state => state.cardModals,
+	updateproduct: state => state.updateproduct,
+	productbrands: state => state.productbrands
 	}),
-	props: ['editPost', 'updateIndex'],
     data() {
-	if(this.editPost) {
+	if(this.$store.state.updateproduct !== null) {
 	return {
 	form: {
-          name: this.editPost.name,
-          stockable: this.editPost.stockable,
-          brand: this.editPost.brand, description: this.editPost.description, image: null,
-          sku: this.editPost.sku, category: this.editPost.category, usp: this.editPost.usp, variant: this.editPost.variant
+        name: this.$store.state.updateproduct.name,
+        stockable: this.$store.state.updateproduct.stockable,
+        brand: this.$store.state.updateproduct.brand, 
+		description: this.$store.state.updateproduct.description, 
+		image: null,
+        sku: this.$store.state.updateproduct.sku, 
+		category: this.$store.state.updateproduct.category, 
+		usp: this.$store.state.updateproduct.usp, 
+		variant: this.$store.state.updateproduct.variant
         },
-	brands: [{ text: 'Select Product Brand', value: null }, 'Unilever', 'Create New'],
+	brands: this.$store.state.productbrands,
 	categories: [{ text: 'Select Product Category', value: null }, 'xl', 'lg', 'md', 'sm'],
 	variants: [{ text: 'Select Variant Category', value: null }, 'Black', 'White', 'Blue', 'Red', 'Yellow', 'Orange'],
     show: true
@@ -119,12 +132,17 @@ import { mapActions } from 'vuex';
 	} else {
 	return {
         form: {
-          name: '',
-          stockable: '',
-          brand: null, description: '', image: null,
-          sku: '', category: null, usp: '', variant: null
+        name: '',
+        stockable: '',
+        brand: [], 
+		description: '', 
+		image: null,
+        sku: '', 
+		category: null, 
+		usp: '', 
+		variant: null
         },
-        brands: [{ text: 'Select Product Brand', value: null }, 'Unilever', 'Create New'],
+        brands: this.$store.state.productbrands,
 		categories: [{ text: 'Select Product Category', value: null }, 'xl', 'lg', 'md', 'sm'],
 		variants: [{ text: 'Select Variant Category', value: null }, 'Black', 'White', 'Blue', 'Red', 'Yellow', 'Orange'],
         show: true
@@ -134,10 +152,15 @@ import { mapActions } from 'vuex';
     methods: {
     ...mapMutations([
 	'addPost',
-	'updatePost'
+	'updatePost',
+	'hideCardModal',
+	'showBrandModal'
 	]),
 	...mapActions([
-      'addPost', 'updatePost'
+    'addPost', 
+	'updatePost', 
+	'hideCardModal',
+	'showBrandModal'
     ]),
       onSubmit(event) {
         event.preventDefault();
@@ -152,10 +175,12 @@ import { mapActions } from 'vuex';
 		variant: this.form.variant,
 		image: this.form.image
 		};
-		if(this.editPost) {
+		if(this.$store.state.updateproduct !== null) {
 		this.$store.dispatch('updatePost', formData);
+		this.$store.dispatch('hideCardModal');
 		} else {
 		this.$store.dispatch('addPost', formData);
+		this.$store.dispatch('hideCardModal');
 		}
       },
       onReset(event) {
@@ -163,7 +188,7 @@ import { mapActions } from 'vuex';
         // Reset our form values
         this.form.name = '';
         this.form.stockable = '';
-        this.form.brand = null;
+        this.form.brand = [];
         this.form.description = '';
 		this.form.image = null;
 		this.form.sku = '';
@@ -171,12 +196,25 @@ import { mapActions } from 'vuex';
 		this.form.usp = null;
 		this.form.variant = null;
         // Trick to reset/clear native browser form validation state
-        this.show = false
+        this.show = false;
         this.$nextTick(() => {
           this.show = true
-        })
-      }
-    }
+        });
+      },
+	hideModal() {
+	this.$store.dispatch('hideCardModal');
+	this.updateIndex = null;
+	},
+	openCreateBrandModal() {
+	const createNew = this.form.brand.find(element => element === 'Create New');
+	if(createNew) {
+	this.$store.dispatch('showBrandModal');
+	}
+	}
+    },
+	components: {
+	BrandModal
+	}
   }
 </script>
 
