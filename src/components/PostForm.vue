@@ -181,6 +181,7 @@ import BrandModal from './BrandModal.vue';
 		} else {
 		this.$store.dispatch('addPost', formData);
 		this.$store.dispatch('hideCardModal');
+		this.$router.push('home');
 		}
       },
       onReset(event) {

@@ -8,15 +8,18 @@ Vue.use(Router);
 
 const routes = [
 	{
-		path: "/",
+		path: "/home",
+		name: "home",
 		component: Dashboard
 	},
 	{
 		path: "/posts",
+		name: "posts",
 		component: PostCard
 	},
 	{
 		path: "/add",
+		name: "add",
 		component: PostModal
 	}
 ];
