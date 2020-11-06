@@ -5,8 +5,8 @@
     <b-card
     no-body
     tag="article"
-    style="width: 70em;"
-    class="mb-2 ml-4 overflow-hidden"
+    style="width: 60em; height: 28em"
+    class="mb-2 overflow-hidden"
 	:items="product"
   >
   <b-row no-gutters>
@@ -28,7 +28,7 @@
 	Category: {{ product.category }}
     </b-card-text>
 	<b-card-text>
-	Brand: {{ product.brand }}
+	Brand: {{ product.brand.toString().replace(/,/g, ", ") }}
     </b-card-text>
 	<b-card-text>
 	{{ product.usp }}
@@ -40,7 +40,7 @@
 	Variant: {{ product.variant }}
     </b-card-text>
 	</b-card-body>
-	<div class="mt-3">
+	<div class="mt-1">
 	<b-button @click="editPost(index)" variant="warning">Edit</b-button>
 	<b-button class="ml-3" @click="deletePost(index)" variant="danger">Delete</b-button>
 	</div>

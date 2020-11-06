@@ -1,7 +1,7 @@
 <template>
 	<ul class="nav nav-tabs">
 		<li class="nav-item">
-			<router-link to="/posts" class="nav-link">Posts</router-link>
+			<router-link to="/dashboard" class="nav-link">Posts</router-link>
 		</li>
 		<li class="nav-item">
 			<router-link to="/add" class="nav-link" @click.native="openModal">Add post</router-link>
@@ -32,8 +32,8 @@ export default {
     'showCardModal'
     ]),
 	openModal(){
-	this.addProductModal = { key: 0, show: true };
-	this.$store.dispatch('showCardModal', 0);
+	this.addProductModal = { key: -1, show: true };
+	this.$store.dispatch('showCardModal', -1);
 	}
   }
 }

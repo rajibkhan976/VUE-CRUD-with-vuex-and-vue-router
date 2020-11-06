@@ -17,10 +17,11 @@
           :options="parents"
         ></b-form-select>
       </b-form-group>
-
-    <b-button type="submit" variant="success">Submit</b-button>
-    <b-button class="ml-2" type="reset" variant="warning">Reset</b-button>
-	<b-button class="ml-2" variant="danger" v-on:click="closeModal">Close</b-button>
+	<div v-bind:style="{marginLeft: '56%'}">
+		<b-button v-bind:style="{boxShadow: '0px 0px 0px 2px #f2f2f2'}" variant="default" v-on:click="closeModal">Close</b-button>
+		<b-button class="ml-2" type="submit" variant="success">Save</b-button>
+		<b-button class="ml-2" type="reset" variant="warning">Reset</b-button>
+	</div>
     </b-form>
   </div>
 </template>

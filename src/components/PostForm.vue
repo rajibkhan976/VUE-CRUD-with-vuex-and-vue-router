@@ -84,10 +84,10 @@
         ></b-form-select>
       </b-form-group>
     </div>
-	<div class="mt-3">
-	<b-button class="ml-3" type="submit" variant="success">Save</b-button>
+	<div class="mt-3" v-bind:style="{marginLeft: '51%'}">
+	<b-button class="ml-3" v-bind:style="{boxShadow: '0px 0px 0px 2px #f2f2f2'}" variant="default" @click="hideModal">Close</b-button>
+	<b-button class="ml-2" type="submit" variant="success">Save</b-button>
 	<b-button class="ml-2" type="reset" variant="warning">Reset</b-button>
-	<b-button class="ml-2" variant="danger" @click="hideModal">Close</b-button>
 	</div>
 	</div>
 	</div>
@@ -181,7 +181,7 @@ import BrandModal from './BrandModal.vue';
 		} else {
 		this.$store.dispatch('addPost', formData);
 		this.$store.dispatch('hideCardModal');
-		this.$router.push('home');
+		this.$router.push('dashboard');
 		}
       },
       onReset(event) {
@@ -203,8 +203,13 @@ import BrandModal from './BrandModal.vue';
         });
       },
 	hideModal() {
-	this.$store.dispatch('hideCardModal');
-	this.updateIndex = null;
+		if(this.$store.state.cardModals.length !== 0 &&
+		this.$store.state.cardModals[0].key === -1
+		) {
+		this.$router.push('dashboard');
+		}
+		this.$store.dispatch('hideCardModal');
+		this.updateIndex = null;
 	},
 	openCreateBrandModal() {
 	const createNew = this.form.brand.find(element => element === 'Create New');
